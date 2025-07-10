@@ -1,0 +1,102 @@
+<!DOCTYPE html><html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>SNIPER-X: BIG/SMALL Hack</title>
+  <style>
+    body {
+      font-family: 'Courier New', monospace;
+      background: url('https://media.giphy.com/media/iicDrNGWxHmDrIni6j/giphy.gif') no-repeat center center fixed;
+      background-size: cover;
+      color: #0ff;
+      padding: 30px;
+    }
+    .container {
+      background: rgba(0, 0, 0, 0.85);
+      border: 2px solid #0ff;
+      border-radius: 16px;
+      padding: 20px;
+      max-width: 600px;
+      margin: auto;
+      box-shadow: 0 0 15px #0ff;
+    }
+    input, button {
+      padding: 10px;
+      margin: 8px 0;
+      width: 100%;
+      background: black;
+      border: 1px solid #0ff;
+      color: #0ff;
+      font-size: 16px;
+      border-radius: 8px;
+    }
+    h1, h2 {
+      text-align: center;
+    }
+    .quote {
+      font-style: italic;
+      font-size: 14px;
+      color: #ccc;
+      margin-top: 10px;
+      text-align: center;
+    }
+    .result-box {
+      margin-top: 20px;
+      padding: 10px;
+      border-top: 1px solid #0ff;
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <h1>⚔️ SNIPER-X: BIG/SMALL HACK</h1>
+    <h2>BY ARNAV</h2>
+    <p class="quote">"I don’t break rules. I break patterns. — Arnav the Sniper"</p><label>Enter Last 5–10 Result Digits (comma separated):</label>
+<input type="text" id="lastDigits" placeholder="e.g. 7,6,0,3,0">
+
+<button onclick="predictBigSmall()">Predict</button>
+
+<div class="result-box" id="resultBox"></div>
+
+<label>Was it a HIT or MISS?</label>
+<button onclick="recordResult('hit')">✅ HIT</button>
+<button onclick="recordResult('miss')">❌ MISS</button>
+
+<p class="quote">TG: <a style="color:#0ff;" href="https://t.me/+fKHabYVx_shkMDk1" target="_blank">Channel</a> | @ARNAV_1100</p>
+
+  </div>  <script>
+    let history = [];
+    let currentPrediction = '';
+
+    function predictBigSmall() {
+      const input = document.getElementById('lastDigits').value.trim();
+      if (!input) return alert("Please enter last result digits.");
+
+      const digits = input.split(',').map(Number).filter(n => !isNaN(n));
+      if (digits.length < 5) return alert("Enter at least 5 digits.");
+
+      const freq = {};
+      for (let d of digits) freq[d] = (freq[d] || 0) + 1;
+
+      // Strategy: frequency + last digit rule + pattern
+      const last = digits[digits.length - 1];
+      let lastRule = (last === 0 || last === 1 || last === 5 || last === 8 || last === 9) ? 'BIG' : 'SMALL';
+
+      let bigCount = 0, smallCount = 0;
+      for (let d of digits) (d % 2 === 0) ? bigCount++ : smallCount++;
+
+      const streakTrend = (bigCount > smallCount) ? 'BIG' : 'SMALL';
+
+      currentPrediction = (lastRule === streakTrend) ? lastRule : (Math.random() > 0.5 ? 'BIG' : 'SMALL');
+
+      document.getElementById('resultBox').innerHTML = `👉 Prediction: <b>${currentPrediction}</b>`;
+    }
+
+    function recordResult(status) {
+      if (!currentPrediction) return alert("Make a prediction first.");
+      history.push({ round: history.length + 1, prediction: currentPrediction, result: status });
+      document.getElementById('resultBox').innerHTML += `<br>Logged as <b>${status.toUpperCase()}</b>`;
+      currentPrediction = '';
+    }
+  </script></body>
+</html>
