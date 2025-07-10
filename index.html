@@ -2,103 +2,157 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>SNIPER-X BIG/SMALL PREDICTOR</title>
+  <title>SNIPER-X BIG/SMALL HACK - ARNAV</title>
   <style>
     body {
       font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-      background: url('https://i.imgur.com/sN8p2xD.jpg') no-repeat center center fixed;
+      background: url('https://wallpapers.com/images/featured/spiderman-pictures-85nhs27bzozz6bhn.jpg') no-repeat center center fixed;
       background-size: cover;
-      margin: 0;
-      padding: 0;
       color: #fff;
       text-align: center;
-    }
-    .container {
-      background: rgba(0, 0, 0, 0.8);
-      padding: 2rem;
-      margin: 2rem auto;
-      border-radius: 15px;
-      max-width: 600px;
-      box-shadow: 0 0 30px rgba(255, 0, 0, 0.5);
-    }
-    input, button {
-      padding: 0.6rem;
-      margin: 0.3rem;
-      border-radius: 10px;
-      border: none;
-      font-size: 1rem;
-    }
-    button {
-      background: crimson;
-      color: white;
-      cursor: pointer;
+      padding: 20px;
+      backdrop-filter: blur(6px);
     }
     h1 {
-      font-size: 2rem;
-      color: #ff5555;
-      text-shadow: 0 0 10px #ff0000;
-    }
-    #predictionResult {
-      font-size: 1.5rem;
-      margin-top: 1rem;
-      color: #00ffcc;
+      font-size: 2.5em;
+      margin-bottom: 0.2em;
+      color: #ff3c00;
+      text-shadow: 2px 2px 8px black;
     }
     .quote {
-      margin-top: 1rem;
+      font-size: 1.2em;
+      margin-bottom: 1.2em;
       font-style: italic;
-      color: #aaa;
+    }
+    .container {
+      background: rgba(0, 0, 0, 0.6);
+      border-radius: 15px;
+      padding: 25px;
+      max-width: 600px;
+      margin: auto;
+      box-shadow: 0 0 12px #ff3c00;
+    }
+    input, button, select {
+      padding: 10px;
+      margin: 5px;
+      border-radius: 8px;
+      border: none;
+      font-size: 1em;
+      outline: none;
+    }
+    button {
+      background: #ff3c00;
+      color: #fff;
+      cursor: pointer;
+      transition: 0.3s;
+    }
+    button:hover {
+      background: #ff6f3c;
+    }
+    .footer {
+      margin-top: 30px;
+      font-size: 0.9em;
+    }
+    .footer a {
+      color: #ff3c00;
+      text-decoration: none;
+    }
+    .history {
+      margin-top: 20px;
+      background: rgba(255, 255, 255, 0.05);
+      padding: 15px;
+      border-radius: 10px;
     }
   </style>
 </head>
 <body>
   <div class="container">
-    <h1>🔫 SNIPER-X BIG/SMALL PREDICTOR</h1>
-    <h2>🔥 ARNAV 🔥</h2>
-    <div>
-      <label>Current Period Number:</label>
-      <input type="number" id="currentPeriod" placeholder="e.g. 880" />
-    </div>
-    <div id="resultsInput"></div>
-    <button onclick="generateInputs()">Enter Last 10 Results</button>
-    <div>
-      <button onclick="predictBS()">Predict</button>
-    </div>
-    <div id="predictionResult"></div>
-    <div class="quote">
-      "THE NAME IS ENOUGH - ARNAV 🔥."
-    </div>
+    <h1>SNIPER-X BIG/SMALL</h1>
+    <div class="quote">"I don’t guess. I snipe. One round, one win — That’s the <strong>ARNAV</strong> code."</div><div id="initPhase">
+  <p><strong>Enter Current Period Number (last 3 digits):</strong></p>
+  <input type="number" id="currentPeriod" placeholder="e.g. 870" /><br />
+  <p><strong>Enter last 10 results (one digit per line):</strong></p>
+  <textarea id="resultInputs" rows="10" cols="30" placeholder="Format:\n7\n6\n3\n..."></textarea><br />
+  <button onclick="saveInitialData()">Save & Start</button>
+</div>
+
+<div id="mainApp" style="display:none">
+  <h2>Next Prediction: <span id="prediction"></span></h2>
+
+  <p><strong>Enter actual result number:</strong></p>
+  <input type="number" id="actualResult" placeholder="e.g. 5" />
+  <button onclick="submitResult(true)">✅ HIT</button>
+  <button onclick="submitResult(false)">❌ MISS</button>
+
+  <div class="history">
+    <h3>Result History</h3>
+    <ul id="historyList"></ul>
+  </div>
+</div>
+
+<div class="footer">
+  TG Profile: <a href="https://t.me/arnav_1100" target="_blank">@ARNAV_1100</a> |
+  Channel: <a href="https://t.me/+fKHabYVx_shkMDk1" target="_blank">Join</a>
+</div>
+
   </div>  <script>
-    function generateInputs() {
-      const currentPeriod = parseInt(document.getElementById('currentPeriod').value);
-      const resultsDiv = document.getElementById('resultsInput');
-      resultsDiv.innerHTML = '';
-      for (let i = currentPeriod - 10; i < currentPeriod; i++) {
-        resultsDiv.innerHTML += `<div><label>${i}: </label><input type='number' id='r${i}' placeholder='Enter result' /></div>`;
+    let history = [];
+
+    function saveInitialData() {
+      const period = parseInt(document.getElementById("currentPeriod").value);
+      const lines = document.getElementById("resultInputs").value.trim().split("\n");
+      if (lines.length !== 10 || isNaN(period)) {
+        alert("Please enter valid period and exactly 10 digits.");
+        return;
       }
+      history = lines.map(d => parseInt(d.trim()));
+      updatePrediction();
+      document.getElementById("initPhase").style.display = "none";
+      document.getElementById("mainApp").style.display = "block";
+      renderHistory();
     }
 
-    function predictBS() {
-      const currentPeriod = parseInt(document.getElementById('currentPeriod').value);
-      let lastResults = [];
-      for (let i = currentPeriod - 10; i < currentPeriod; i++) {
-        const val = document.getElementById('r' + i)?.value;
-        if (val !== undefined) lastResults.push(parseInt(val));
-      }
+    function updatePrediction() {
+      const freq = {};
+      for (let num of history) freq[num] = (freq[num] || 0) + 1;
+      const sorted = Object.entries(freq).sort((a, b) => b[1] - a[1]);
+      const top3 = sorted.slice(0, 3).map(e => e[0]);
 
-      let lastDigit = lastResults[lastResults.length - 1];
-      let countOdd = lastResults.filter(n => n % 2 !== 0).length;
-      let countEven = lastResults.filter(n => n % 2 === 0).length;
-      let streak = 1;
-      for (let i = lastResults.length - 1; i > 0; i--) {
-        if ((lastResults[i] >= 5) === (lastResults[i - 1] >= 5)) streak++;
-        else break;
-      }
+      // Layer 1: last digit logic
+      const last = history[history.length - 1];
+      const rule = ["BIG","BIG","SMALL","SMALL","SMALL","BIG","SMALL","SMALL","BIG","BIG"];
+      const base = rule[last];
 
-      let rule1 = [0,1,5,8,9].includes(lastDigit) ? 'BIG' : 'SMALL';
-      let rule2 = streak >= 3 ? (rule1 === 'BIG' ? 'SMALL' : 'BIG') : rule1;
-      let rule3 = countEven > countOdd ? 'BIG' : (countOdd > countEven ? 'SMALL' : rule2);
+      // Layer 2: streak breaker
+      const last3 = history.slice(-3);
+      let streak = last3.every(v => rule[v] === rule[last3[0]]) ? true : false;
 
-      document.getElementById('predictionResult').innerHTML = `Period ${currentPeriod} Prediction: <strong>${rule3}</strong>`;
+      // Layer 3: odd/even counter
+      const odd = history.filter(x => x % 2 === 1).length;
+      const even = 10 - odd;
+      const trend = odd > even ? "SMALL" : "BIG";
+
+      let final = base;
+      if (streak) final = base === "BIG" ? "SMALL" : "BIG";
+      else if (base !== trend) final = trend;
+
+      document.getElementById("prediction").innerText = final;
+    }
+
+    function submitResult(hit) {
+      const result = parseInt(document.getElementById("actualResult").value);
+      if (isNaN(result)) return alert("Please enter the actual result number");
+      history.push(result);
+      if (history.length > 10) history.shift();
+      updatePrediction();
+      renderHistory();
+      document.getElementById("actualResult").value = "";
+    }
+
+    function renderHistory() {
+      document.getElementById("historyList").innerHTML = history
+        .map((v, i) => `<li>Period ${i + 1}: ${v}</li>`)
+        .join("");
     }
   </script></body>
 </html>
