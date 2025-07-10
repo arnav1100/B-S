@@ -1,123 +1,159 @@
-<!DOCTYPE html><html lang="en"><head>
+<!DOCTYPE html><html lang="en">
+<head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>SNIPER-X BIG/SMALL Hack</title>
+  <title>CRACKER 1.0 - Sniper-X BIG/SMALL Hack</title>
   <style>
     body {
       margin: 0;
-      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-      background: url('https://i.ibb.co/TKx8skN/spiderman-bg.jpg') no-repeat center center fixed;
+      padding: 0;
+      background: black url('https://i.imgur.com/7IjSG0M.jpeg') no-repeat center center fixed;
       background-size: cover;
-      color: #fff;
+      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+      color: #00ffcc;
     }
     .container {
-      backdrop-filter: blur(12px);
-      background: rgba(0, 0, 0, 0.75);
-      border-radius: 20px;
+      background: rgba(0, 0, 0, 0.8);
       max-width: 600px;
-      margin: 50px auto;
+      margin: 30px auto;
       padding: 30px;
-      box-shadow: 0 0 20px rgba(255, 255, 255, 0.2);
+      border-radius: 20px;
+      box-shadow: 0 0 15px #00ffcc;
     }
     h1 {
       text-align: center;
-      color: #ff0000;
-      text-shadow: 0 0 10px #ff0000;
-    }
-    label, input, button {
-      display: block;
-      width: 100%;
-      margin-top: 15px;
-    }
-    input, button {
-      padding: 10px;
-      border-radius: 10px;
-      border: none;
-    }
-    button {
-      background-color: #ff0000;
-      color: white;
-      font-weight: bold;
-      cursor: pointer;
-      box-shadow: 0 0 10px #ff0000;
-    }
-    .prediction {
-      margin-top: 20px;
-      padding: 15px;
-      background-color: rgba(255, 255, 255, 0.1);
-      border-radius: 10px;
-      font-size: 20px;
+      font-size: 28px;
     }
     .quote {
-      margin-top: 30px;
       text-align: center;
-      font-size: 16px;
-      font-style: italic;
-      color: #ccc;
+      margin-top: -15px;
+      margin-bottom: 25px;
+      font-weight: bold;
+      font-size: 18px;
     }
-    .footer-links {
+    label {
+      display: block;
+      margin: 15px 0 5px;
+      font-weight: bold;
+    }
+    input[type="text"], button {
+      width: 100%;
+      padding: 10px;
+      border-radius: 8px;
+      border: none;
+      margin-bottom: 15px;
+    }
+    button {
+      background: #00ffcc;
+      color: black;
+      font-weight: bold;
+      cursor: pointer;
+      transition: background 0.3s;
+    }
+    button:hover {
+      background: #00ffaa;
+    }
+    .result {
+      font-size: 24px;
+      font-weight: bold;
+      text-align: center;
       margin-top: 20px;
-      text-align: center;
     }
-    .footer-links a {
-      color: #00ffff;
-      margin: 0 10px;
+    .footer {
+      text-align: center;
+      margin-top: 30px;
+      font-size: 14px;
+    }
+    .footer a {
+      color: #00ffcc;
       text-decoration: none;
     }
   </style>
-</head><body>
+</head>
+<body>
   <div class="container">
-    <h1>CRACKER 1.0 - SNIPER-X 🔥</h1>
-    <p class="quote">"THE NAME IS ENOUGH - ARNAV 🔥"</p>
-    <label for="current">Current Period Number (last 3 digits)</label>
-    <input type="number" id="current" placeholder="e.g., 865" /><div id="historyInput"></div>
+    <h1>CRACKER 1.0</h1>
+    <div class="quote">THE NAME IS ENOUGH — <strong>ARNAV 🔥</strong></div><div id="init-section">
+  <label>Current Period Number (last 3 digits)</label>
+  <input type="text" id="currentPeriod" placeholder="e.g., 865" />
+  <label>Enter last 10 results (ONLY digits 0–9)</label>
+  <div id="lastResultsInputs"></div>
+  <button onclick="saveHistory()">Save History</button>
+</div>
 
-<button onclick="saveHistory()">Save Last 10 Results</button>
-<div id="prediction" class="prediction"></div>
+<div id="prediction-section" style="display:none">
+  <div class="result">Next Prediction: <span id="prediction"></span></div>
+  <button onclick="registerHit(true)">HIT ✅</button>
+  <button onclick="registerHit(false)">MISS ❌</button>
+  <div id="actualResultSection" style="margin-top:20px; display:none">
+    <label>What was the actual number?</label>
+    <input type="text" id="actualResult" placeholder="Enter number (0-9)" />
+    <button onclick="submitResult()">Submit Result</button>
+  </div>
+</div>
 
-<div class="footer-links">
-  <a href="https://t.me/arnav_1100" target="_blank">@ARNAV_1100</a>
-  <a href="https://t.me/+fKHabYVx_shkMDk1" target="_blank">Join Channel</a>
+<div class="footer">
+  🔗 <a href="https://t.me/+fKHabYVx_shkMDk1" target="_blank">Join Channel</a> |
+  📩 <a href="https://t.me/arnav_1100" target="_blank">@ARNAV_1100</a>
 </div>
 
   </div>  <script>
     let history = [];
+    let basePeriod = 0;
+
     function saveHistory() {
-      const current = parseInt(document.getElementById("current").value);
-      const historyInput = document.getElementById("historyInput");
-      historyInput.innerHTML = '';
-      for (let i = current - 10; i < current; i++) {
-        historyInput.innerHTML += `
-          <label>Period ${i}</label>
-          <input type="number" id="period${i}" placeholder="Result (0-9)" />
-        `;
+      const period = parseInt(document.getElementById('currentPeriod').value);
+      if (isNaN(period)) return alert('Invalid period');
+      basePeriod = period - 10;
+      history = [];
+      for (let i = 0; i < 10; i++) {
+        const val = document.getElementById('input' + i).value;
+        if (!val.match(/^\d$/)) return alert('All results must be 0–9');
+        history.push({ period: basePeriod + i + 1, result: parseInt(val) });
       }
-      document.querySelector('button').innerText = "Submit & Predict";
-      document.querySelector('button').onclick = function () {
-        for (let i = current - 10; i < current; i++) {
-          const val = parseInt(document.getElementById("period" + i).value);
-          if (!isNaN(val)) history.push(val);
-        }
-        if (history.length === 10) makePrediction(current);
-      };
+      document.getElementById('init-section').style.display = 'none';
+      document.getElementById('prediction-section').style.display = 'block';
+      predict();
     }
 
-    function makePrediction(current) {
-      const lastDigit = history[history.length - 1];
-      let rule1 = [0, 1, 5, 8, 9].includes(lastDigit) ? 'BIG' : 'SMALL';
-
-      const last3 = history.slice(-3);
-      let rule2 = '';
-      if (last3.every((v) => v >= 5)) rule2 = 'SMALL';
-      else if (last3.every((v) => v < 5)) rule2 = 'BIG';
-
-      const oddCount = history.filter((n) => n % 2 !== 0).length;
-      const evenCount = history.length - oddCount;
-      let rule3 = oddCount > evenCount ? 'SMALL' : 'BIG';
-
-      const allRules = [rule1, rule2, rule3].filter(Boolean);
-      const prediction = allRules.filter((v, i, a) => a.indexOf(v) === i).length === 1 ? allRules[0] : rule1;
-
-      document.getElementById("prediction").innerText = `Predicted: ${prediction}\nBased on Layers: ${allRules.join(', ')}`;
+    function registerHit(hit) {
+      document.getElementById('actualResultSection').style.display = 'block';
     }
-  </script></body></html>
+
+    function submitResult() {
+      const actual = parseInt(document.getElementById('actualResult').value);
+      if (isNaN(actual)) return alert('Enter a valid result (0–9)');
+      const lastPeriod = history[history.length - 1].period + 1;
+      history.push({ period: lastPeriod, result: actual });
+      if (history.length > 10) history.shift();
+      document.getElementById('actualResult').value = '';
+      document.getElementById('actualResultSection').style.display = 'none';
+      predict();
+    }
+
+    function predict() {
+      const freq = {};
+      for (const h of history) {
+        freq[h.result] = (freq[h.result] || 0) + 1;
+      }
+      const sorted = Object.entries(freq).sort((a, b) => b[1] - a[1]);
+      const top = sorted.slice(0, 3).map(x => x[0]);
+      const last = history[history.length - 1].result;
+      let guess = 'BIG';
+      if ([2, 3, 4, 6, 7].includes(last)) guess = 'SMALL';
+      document.getElementById('prediction').innerText = guess;
+    }
+
+    // Add input boxes for 10 results
+    for (let i = 0; i < 10; i++) {
+      const lbl = document.createElement('label');
+      lbl.innerText = `Period ${i + 1}:`;
+      const inp = document.createElement('input');
+      inp.type = 'text';
+      inp.id = 'input' + i;
+      inp.placeholder = '0–9';
+      document.getElementById('lastResultsInputs').appendChild(lbl);
+      document.getElementById('lastResultsInputs').appendChild(inp);
+    }
+  </script></body>
+</html>
