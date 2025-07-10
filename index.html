@@ -1,122 +1,104 @@
 <!DOCTYPE html><html lang="en">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>SNIPER-X | BIG/SMALL HACK</title>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>SNIPER-X BIG/SMALL PREDICTOR</title>
   <style>
     body {
-      background: url('https://i.ibb.co/yPNNtnf/hacker-bg.gif') no-repeat center center fixed;
+      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+      background: url('https://i.imgur.com/sN8p2xD.jpg') no-repeat center center fixed;
       background-size: cover;
-      color: #00ffcc;
-      font-family: 'Courier New', Courier, monospace;
+      margin: 0;
+      padding: 0;
+      color: #fff;
       text-align: center;
+    }
+    .container {
+      background: rgba(0, 0, 0, 0.8);
       padding: 2rem;
-    }
-    h1 {
-      font-size: 2.5rem;
-      text-shadow: 0 0 10px #00ffcc;
-    }
-    .box {
-      background: rgba(0,0,0,0.7);
-      padding: 1.5rem;
-      border-radius: 20px;
-      max-width: 500px;
-      margin: 1rem auto;
-      box-shadow: 0 0 25px #00ffcc;
+      margin: 2rem auto;
+      border-radius: 15px;
+      max-width: 600px;
+      box-shadow: 0 0 30px rgba(255, 0, 0, 0.5);
     }
     input, button {
       padding: 0.6rem;
-      font-size: 1.2rem;
-      margin: 0.5rem;
+      margin: 0.3rem;
       border-radius: 10px;
       border: none;
-      outline: none;
+      font-size: 1rem;
     }
     button {
-      background: #00ffcc;
-      color: #000;
+      background: crimson;
+      color: white;
       cursor: pointer;
-      transition: 0.3s;
     }
-    button:hover {
-      background: #00ffff;
-      box-shadow: 0 0 10px #00ffff;
-    }
-    .prediction {
+    h1 {
       font-size: 2rem;
-      margin-top: 1rem;
-      font-weight: bold;
+      color: #ff5555;
+      text-shadow: 0 0 10px #ff0000;
     }
-    .footer {
-      margin-top: 2rem;
-      font-size: 0.9rem;
-      color: #ccc;
+    #predictionResult {
+      font-size: 1.5rem;
+      margin-top: 1rem;
+      color: #00ffcc;
     }
     .quote {
-      font-style: italic;
       margin-top: 1rem;
-      color: #fff;
-      text-shadow: 0 0 5px #ff00ff;
+      font-style: italic;
+      color: #aaa;
     }
   </style>
 </head>
 <body>
-  <h1>🔥 SNIPER-X 🔥</h1>
-  <div class="box">
-    <p>Enter <strong>Current Period Number</strong>:</p>
-    <input type="number" id="currentPeriod" placeholder="e.g., 870">
-    <p>Enter last 10 results (only final digits):</p>
-    <input type="text" id="lastDigits" placeholder="e.g., 2 7 6 0 3 0 8 7 4 1">
-    <br>
-    <button onclick="predict()">Predict BIG/SMALL</button>
-    <div class="prediction" id="predictionBox"></div>
-    <div id="feedbackBox" style="margin-top: 1rem;"></div>
-  </div>  <div class="quote">
-    “Sniping patterns — not luck. Powered by ARNAV”
-  </div>
-  <div class="footer">
-    Telegram: <a href="https://t.me/+fKHabYVx_shkMDk1" target="_blank">@ARNAV_1100</a>
+  <div class="container">
+    <h1>🔫 SNIPER-X BIG/SMALL PREDICTOR</h1>
+    <h2>🔥 ARNAV 🔥</h2>
+    <div>
+      <label>Current Period Number:</label>
+      <input type="number" id="currentPeriod" placeholder="e.g. 880" />
+    </div>
+    <div id="resultsInput"></div>
+    <button onclick="generateInputs()">Enter Last 10 Results</button>
+    <div>
+      <button onclick="predictBS()">Predict</button>
+    </div>
+    <div id="predictionResult"></div>
+    <div class="quote">
+      "THE NAME IS ENOUGH - ARNAV 🔥."
+    </div>
   </div>  <script>
-    let lossCount = 0;
+    function generateInputs() {
+      const currentPeriod = parseInt(document.getElementById('currentPeriod').value);
+      const resultsDiv = document.getElementById('resultsInput');
+      resultsDiv.innerHTML = '';
+      for (let i = currentPeriod - 10; i < currentPeriod; i++) {
+        resultsDiv.innerHTML += `<div><label>${i}: </label><input type='number' id='r${i}' placeholder='Enter result' /></div>`;
+      }
+    }
 
-    function predict() {
-      const digits = document.getElementById("lastDigits").value.trim().split(" ").map(Number);
-      const current = parseInt(document.getElementById("currentPeriod").value);
-      if (digits.length !== 10 || isNaN(current)) {
-        alert("Enter 10 digits and a valid period number.");
-        return;
+    function predictBS() {
+      const currentPeriod = parseInt(document.getElementById('currentPeriod').value);
+      let lastResults = [];
+      for (let i = currentPeriod - 10; i < currentPeriod; i++) {
+        const val = document.getElementById('r' + i)?.value;
+        if (val !== undefined) lastResults.push(parseInt(val));
       }
 
+      let lastDigit = lastResults[lastResults.length - 1];
+      let countOdd = lastResults.filter(n => n % 2 !== 0).length;
+      let countEven = lastResults.filter(n => n % 2 === 0).length;
       let streak = 1;
-      for (let i = 9; i > 0; i--) {
-        if (digits[i] === digits[i - 1]) streak++;
+      for (let i = lastResults.length - 1; i > 0; i--) {
+        if ((lastResults[i] >= 5) === (lastResults[i - 1] >= 5)) streak++;
         else break;
       }
 
-      const lastDigit = digits[9];
-      let base = ['BIG','BIG','SMALL','SMALL','SMALL','BIG','SMALL','SMALL','BIG','BIG'][lastDigit];
+      let rule1 = [0,1,5,8,9].includes(lastDigit) ? 'BIG' : 'SMALL';
+      let rule2 = streak >= 3 ? (rule1 === 'BIG' ? 'SMALL' : 'BIG') : rule1;
+      let rule3 = countEven > countOdd ? 'BIG' : (countOdd > countEven ? 'SMALL' : rule2);
 
-      const odd = digits.filter(x => x%2 !== 0).length;
-      const even = 10 - odd;
-      const oddEvenBias = odd > even ? 'SMALL' : even > odd ? 'BIG' : base;
-
-      let final = base;
-      if (streak >= 3) final = base === 'BIG' ? 'SMALL' : 'BIG';
-      else final = oddEvenBias;
-
-      if (lossCount >= 2) final = final === 'BIG' ? 'SMALL' : 'BIG';
-
-      document.getElementById("predictionBox").innerHTML = `Prediction for ${current}: <span style='color:yellow;'>${final}</span>`;
-      document.getElementById("feedbackBox").innerHTML = `
-        <button onclick="updateResult('hit')">✅ HIT</button>
-        <button onclick="updateResult('miss')">❌ MISS</button>
-      `;
-    }
-
-    function updateResult(result) {
-      if(result === 'miss') lossCount++;
-      else lossCount = 0;
-      document.getElementById("feedbackBox").innerHTML = `<span style='color:#0f0;'>Result recorded: ${result.toUpperCase()}</span>`;
+      document.getElementById('predictionResult').innerHTML = `Period ${currentPeriod} Prediction: <strong>${rule3}</strong>`;
     }
   </script></body>
 </html>
